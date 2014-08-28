@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Какой у меня браузер?</title>
+    <link rel="stylesheet" href="/css/normalize-3.0.1.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <noscript><style> 
+        .jsonly { display: none; }
+    </style></noscript>
+  </head>
+  <body>
+    <div class="navbar">
+        <div class="container">
+            <h1 class="pull-left">Какой у меня браузер?</h1>
+            <ul class="pull-right menu">
+                <li class="menu-github"><a href="https://github.com/algenon/whatbrowser">Github</a></li>
+                <li class="menu-about"><a href="/about.html">О проекте</a></li>
+            </ul>
+        </div>
+    </div>
+    <noscript>
+    <div class="nojs header">
+        <div class="container">
+            <h2>У вас выключен JavaScript :-(</h2>
+            <h4>Пожалуйста, включите его в свойствах браузера и обновите страницу.</h4>
+        </div>
+    </div>
+    </noscript>
+    
+    <div id="message" class="jsonly header">
+        <div class="container">
+            <h2>Собираю информацию...</h2>
+        </div>
+    </div>
+
+    <div id="result" style="display: none;">
+        <div class="header">
+            <div class="container">
+                <h2 id="header-msg">У вас {browser} на {os}</h2>
+                <div id="info-link">
+                    <h4>Отправьте в службу поддержки эту ссылку:</h4>
+                    <div id="info-link-copy" class="info-link">
+                        <input id="copy-value" class="link-text" type="text" readonly="readonly"><button class="link-button" data-clipboard-target="copy-value">Копировать</button>
+                        <span class="copy-status"></span>
+                    </div>
+                    <div id="info-link-mail" class="info-link" style="display: none;">
+                        <input id="mail-value" class="link-text" type="text" readonly="readonly"><a href="#" class="link-button">Отправить по email</a>
+                    </div>
+                </div>
+                <div id="info-nolink" class="info-link" style="display: none;">
+                    <h4>Скопируйте текст на этой странице и отправьте в службу поддержки.</h4>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="details-wrapper">
+                <h3>Технические детали</h3>
+                <div class="details">
+                    <table id="details-table" class="details-table">
+                        <tbody></tbody>
+                    </table>
+                    <textarea id="details-tocopy" style="display: none;"></textarea>
+                </div>
+            </div>
+            <div class="cfx footer">
+                <script type="text/javascript" src="//yandex.st/share/share.js" defer="defer"></script>
+                <div class="pull-left signature">2014&nbsp;<a href="https://twitter.com/nalgeon">@nalgeon</a></div>
+                <div class="yashare-auto-init pull-right" data-yashareL10n="ru" data-yashareQuickServices="vkontakte,facebook,twitter" data-yashareTheme="counter"></div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/lib/jquery-1.11.1.min.js"></script>
+    <script src="/js/lib/swfobject-2.2.min.js"></script>
+    <script src="/js/lib/zeroclipboard-2.1.6.min.js"></script>
+    <script src="/js/lib/cookies-0.4.0.min.js"></script>
+    <script src="/js/lib/ua-parser-0.7.0.min.js"></script>
+    <script src="/js/lib/deployjava.js"></script>
+    <script src="/js/lib/parse-1.2.19.min.js"></script>
+    <script src="/js/whatbrowser.js"></script>
+    <script src="/js/hashcode.js"></script>
+    <script src="/js/manager.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>
