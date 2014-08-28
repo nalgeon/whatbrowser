@@ -1,3 +1,6 @@
+/*
+ * Browser info module: webiste info detection 
+ */
 (function(window, $, UAParser, swfobject, deployJava) {
     'use strict';
 

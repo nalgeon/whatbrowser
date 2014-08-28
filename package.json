@@ -1,0 +1,17 @@
+{
+    "name": "whatbrowser.ru",
+    "version": "0.1.0",
+    "description": "WhatBrowser.ru gathers information about user browser for tech support",
+    "homepage": "http://whatbrowser.ru",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/algenon/whatbrowser.git"
+    },
+    "devDependencies": {
+        "grunt": ">= 0.4",
+        "grunt-cli": ">= 0.1",
+        "grunt-contrib-uglify": ">= 0.2",
+        "grunt-contrib-concat": ">= 0.4",
+        "grunt-contrib-cssmin": ">= 0.10"
+    }
+}

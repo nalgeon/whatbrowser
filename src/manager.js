@@ -1,3 +1,6 @@
+/*
+ * Browser info manager module: webiste info persistence
+ */
 (function($, Cookies, WhatBrowser, Parse) {
     'use strict';
 

@@ -1,3 +1,6 @@
+/**
+ * Hashcode module: object to string serialization
+ */
 (function() {
     'use strict';
 

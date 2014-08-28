@@ -1,3 +1,6 @@
+/**
+ * Main module: rendering, ui logic
+ */
 (function($, ZeroClipboard, Hashcode, WhatBrowser, WhatBrowserManager) {
     'use strict';
 
