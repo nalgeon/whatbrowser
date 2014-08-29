@@ -41,8 +41,8 @@
         var self = whatbrowser;
         load_property(whatbrowser, 'browser_size', function() {
             return {
-                height: window.innerHeight,
-                width: window.innerWidth
+                height: $(window).height(),
+                width: $(window).width()
             };
         }, source);
         self.browser_size.toString = function() {
@@ -62,15 +62,17 @@
         load_property(whatbrowser, 'flash', function() {
             return {
                 enabled: has_flash(),
-                version: swfobject.getFlashPlayerVersion()
+                version: swfobject && swfobject.getFlashPlayerVersion()
             };
         }, source);
         self.flash.toString = function() {
-            return self.flash.enabled
-                ? self.flash.version.major + '.' + 
+            if (self.flash.enabled && self.flash.version) {
+                return self.flash.version.major + '.' + 
                   self.flash.version.minor + '.' + 
-                  self.flash.version.release
-                : 'нет';
+                  self.flash.version.release;
+            } else {
+                return self.flash.enabled ? 'да' : 'нет';
+            }
         };
     }
 
@@ -78,8 +80,8 @@
         var self = whatbrowser;
         load_property(whatbrowser, 'java', function() {
             return {
-                enabled: navigator.javaEnabled(),
-                version: deployJava.getJREs().shift() || ''
+                enabled: navigator.javaEnabled && navigator.javaEnabled(),
+                version: deployJava && deployJava.getJREs().shift()
             };
         }, source);
         self.java.toString = function() {
@@ -106,19 +108,24 @@
     function screenfn(whatbrowser, source) {
         var self = whatbrowser;
         load_property(whatbrowser, 'screen', function() {
-            return {
+            return window.screen && {
                 color_depth: window.screen.colorDepth,
                 height: window.screen.height,
                 width: window.screen.width
             };
         }, source);
         self.screen.toString = function() {
-            return self.screen.width + ' x ' + self.screen.height + ' px, ' + self.screen.color_depth + ' bit';
+            return window.screen 
+                ? self.screen.width + ' x ' + self.screen.height + ' px, ' + self.screen.color_depth + ' bit'
+                : '';
         };
     }
 
     function ua(whatbrowser, source) {
         var self = whatbrowser;
+        if (!UAParser) {
+            return;
+        }
         load_property(whatbrowser, 'ua', function() {
             return (new UAParser()).getResult();
         }, source);
@@ -153,25 +160,16 @@
         };
     }
 
-    function geo(whatbrowser) {
+    function fill_geo(whatbrowser, geo) {
         var self = whatbrowser;
-        $.getJSON('//freegeoip.net/json/?callback=?', function(data) {
-            self.geo = {
-                ip: data.ip,
-                position: {
-                    latitude: data.latitude,
-                    longitude: data.longitude
-                },
-                address: {
-                    country: data.country_name,
-                    region: data.region_name,
-                    city: data.city
-                }
-            };
+        self.geo = geo;
+        if (self.geo && self.geo.position) {
             self.geo.position.toString = function() {
                 var position = self.geo.position;
                 return position.latitude ? position.latitude + ', ' + position.longitude : '';
             }
+        }
+        if (self.geo && self.geo.address) {
             self.geo.address.toString = function() {
                 var address = self.geo.address,
                     str = address.country || '';
@@ -179,15 +177,40 @@
                 str += (address.city && (', ' + address.city)) || '';
                 return str;
             }
-            if (WhatBrowser.on_geo) {
-                WhatBrowser.on_geo(whatbrowser);
-            }
-        });
+        }
     }
 
-    function WhatBrowser(source, options) {
+    function geo(whatbrowser) {
+        var self = whatbrowser,
+            promise = $.Deferred();
+        $.getJSON('//freegeoip.net/json/?callback=?')
+            .done(function(data) {
+                fill_geo(whatbrowser, 
+                    {
+                        ip: data.ip,
+                        position: {
+                            latitude: data.latitude,
+                            longitude: data.longitude
+                        },
+                        address: {
+                            country: data.country_name,
+                            region: data.region_name,
+                            city: data.city
+                        }
+                    }
+                );
+                // console.log('Geo ready');
+                promise.resolve(whatbrowser);
+            })
+            .fail(function() {
+                // console.log('Geo failed');
+                promise.resolve(whatbrowser);  
+            })
+        return promise;
+    }
+
+    function WhatBrowser(source) {
         var self = this;
-        options = options || {};
         browser_size(self, source);
         cookies(self, source);
         flash(self, source);
@@ -196,14 +219,26 @@
         online(self, source);
         screenfn(self, source);
         ua(self, source);
-        if (options.geo) {
-            geo(self, source);
+        if (source) {
+            fill_geo(self, source.geo);
         }
     }
 
-    WhatBrowser.on_geo = null;
+    WhatBrowser.create = function(options) {
+        var whatbrowser = new WhatBrowser(),
+            promise = $.Deferred();
+        options = options || {};
+        if (options.geo) {
+            geo(whatbrowser).always(function(whatbrowser) {
+                promise.resolve(whatbrowser);    
+            });
+        } else {
+            promise.resolve(whatbrowser);
+        }
+        return promise;
+    }
 
     window.WhatBrowser = WhatBrowser;
     return WhatBrowser;
 
-})(window, jQuery, window.UAParser, window.swfobject, window.deployJava);
+})(window, window.jQuery, window.UAParser, window.swfobject, window.deployJava);

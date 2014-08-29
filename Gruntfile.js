@@ -16,11 +16,12 @@ module.exports = function(grunt){
             options: {
                 banner: '<%= banner %>',
                 beautify: false,
-                mangle: true
+                compress: false,
+                mangle: false
             },
-            main: {
+            website: {
                 files: {
-                    'dist/main.min.js': ['src/whatbrowser.js', 'src/hashcode.js', 'src/manager.js', 'src/main.js'],
+                    'dist/website.min.js': ['src/whatbrowser.js', 'src/hashcode.js', 'src/manager.js', 'src/main.js'],
                 }
             },
             whatbrowser: {
@@ -31,20 +32,30 @@ module.exports = function(grunt){
         },
 
         concat: {
-            main: {
-                src: ['lib/*.js', 'dist/main.min.js'],
-                dest: 'dist/all.min.js'
+            ie8: {
+                src: ['lib/cookies-0.4.0.min.js', 
+                      'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.0.min.js', 
+                      'lib/deployjava.js', 'dist/website.min.js'],
+                dest: 'dist/ie8.min.js'
             },
-            whatbrowser: {
-                src: ['lib/ua-parser-0.7.0.min.js', 'lib/swfobject-2.2.min.js', 'lib/deployjava.js', 'dist/whatbrowser.min.js'],
-                dest: 'dist/whatbrowser.uber.js'
+            ie9: {
+                src: ['lib/cookies-0.4.0.min.js', 'lib/zeroclipboard-2.1.6.min.js',
+                      'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.0.min.js', 
+                      'lib/deployjava.js', 'dist/website.min.js'],
+                dest: 'dist/ie9.min.js'
+            },
+            all: {
+                src: ['lib/cookies-0.4.0.min.js', 'lib/zeroclipboard-2.1.6.min.js',
+                      'lib/parse-1.2.19.min.js', 'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.0.min.js', 
+                      'lib/deployjava.js', 'dist/website.min.js'],
+                dest: 'dist/all.min.js'
             }
         },
 
         cssmin: {
-            main: {
+            website: {
                 files: {
-                    'dist/all.min.css': ['css/main.css', 'css/normalize-3.0.1.min.css']
+                    'dist/website.min.css': ['css/main.css', 'css/normalize-3.0.1.min.css']
                 }
             }
         }

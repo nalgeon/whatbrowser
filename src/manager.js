@@ -4,8 +4,13 @@
 (function($, Cookies, WhatBrowser, Parse) {
     'use strict';
 
-    Parse.initialize("WxMn71WOwf2RM6s6vYR57Th1rsfRplumcDDaWQxF", "aomlkmdE6QrVTF0FRoX4XgyJFqR2FP2W4QtLJg7A");
-    var WhatBrowserInfo = Parse.Object.extend("WhatBrowser");
+    var parseEnabled = Parse || false,
+        WhatBrowserInfo;
+    
+    if (parseEnabled) {
+        Parse.initialize("WxMn71WOwf2RM6s6vYR57Th1rsfRplumcDDaWQxF", "aomlkmdE6QrVTF0FRoX4XgyJFqR2FP2W4QtLJg7A");
+        WhatBrowserInfo = Parse && Parse.Object.extend("WhatBrowser");
+    }
 
     /**
      * Get browser info id from url hash or from cookies
@@ -34,23 +39,31 @@
      * Persist new browser info to DB.
      */
     function create() {
-        var whatbrowser = new WhatBrowser(null, { geo: true }),
-            info = new WhatBrowserInfo(),
+        var loader = WhatBrowser.create({ geo: true }),
             promise = $.Deferred();
-        info.save(whatbrowser).then(
-            function(info) {
-                whatbrowser.id = info.id;
-                whatbrowser.link = 'http://whatbrowser.ru/#!' + whatbrowser.id;
-                // save id to cookies to load it later on page refresh
-                if (Cookies.enabled) {
-                    Cookies.set('whatbrowser', whatbrowser.id, { expires: 28800 });
-                }
-                promise.resolve(whatbrowser);
-            },
-            function(error) {
-                promise.reject(whatbrowser, error);  
+        
+        loader.done(function(whatbrowser) {
+            if (parseEnabled) {
+                var info = new WhatBrowserInfo();
+                info.save(whatbrowser).then(
+                    function(info) {
+                        whatbrowser.id = info.id;
+                        whatbrowser.link = 'http://whatbrowser.ru/#!' + whatbrowser.id;
+                        // save id to cookies to load it later on page refresh
+                        if (Cookies.enabled) {
+                            Cookies.set('whatbrowser', whatbrowser.id, { expires: 28800 });
+                        }
+                        promise.resolve(whatbrowser);
+                    },
+                    function(error) {
+                        promise.reject(whatbrowser, error);  
+                    }
+                );
+            } else {
+                promise.reject(whatbrowser, { message: 'Parse not initialized' });
             }
-        );
+        });
+        
         return promise;
     }
 
@@ -58,19 +71,23 @@
      * Load browser info from DB.
      */
     function load(id) {
-        var query = new Parse.Query(WhatBrowserInfo),
-            promise = $.Deferred();
-        query.get(id).then(
-            function(info) {
-                var whatbrowser = new WhatBrowser(info.attributes, { geo: true });
-                whatbrowser.id = info.id;
-                whatbrowser.link = 'http://whatbrowser.ru/#!' + whatbrowser.id;
-                promise.resolve(whatbrowser);
-            },
-            function(error) {
-                promise.reject(error);  
-            }
-        );
+        var promise = $.Deferred();
+        if (parseEnabled) {
+            var query = new Parse.Query(WhatBrowserInfo);
+            query.get(id).then(
+                function(info) {
+                    var whatbrowser = new WhatBrowser(info.attributes);
+                    whatbrowser.id = info.id;
+                    whatbrowser.link = 'http://whatbrowser.ru/#!' + whatbrowser.id;
+                    promise.resolve(whatbrowser);
+                },
+                function(error) {
+                    promise.reject(error);  
+                }
+            );
+        } else {
+            promise.reject({ message: 'Parse not initialized' });
+        }
         return promise;
     }
 

@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
+    <title>Какой у меня браузер?</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Какой у меня браузер?</title>
-    <link rel="stylesheet" href="dist/all.min.css">
+    <meta name="description" content="Сервис определения информации о браузере для службы поддержки">
+    <meta name="keywords" content="версия браузера, узнать версию браузера, какая версия браузера, какая у меня операционная система">
+    <meta property="og:title" content="Какой у меня браузер?"/>
+    <meta property="og:url" content="http://whatbrowser.ru"/>
+    <meta property="og:site_name" content="WhatBrowser.ru"/>
+    
+    <link rel="stylesheet" href="dist/website.min.css">
     <noscript><style> 
         .jsonly { display: none; }
     </style></noscript>
@@ -48,7 +54,14 @@
                         <input id="mail-value" class="link-text" type="text" readonly="readonly"><a href="#" class="link-button">Отправить по email</a>
                     </div>
                 </div>
-                <div id="info-nolink" class="info-link" style="display: none;">
+                <div id="info-copy" style="display: none;">
+                    <h4>Скопируйте текст на этой странице и отправьте в службу поддержки.</h4>
+                    <div class="info-link">
+                        <button class="link-button" data-clipboard-target="details-tocopy">Копировать текст</button>
+                        <span class="copy-status"></span>
+                    </div>
+                </div>
+                <div id="info-nothing" class="info-link" style="display: none;">
                     <h4>Скопируйте текст на этой странице и отправьте в службу поддержки.</h4>
                 </div>
             </div>
@@ -70,6 +83,16 @@
             </div>
         </div>
     </div>
-    <script src="dist/all.min.js" defer="defer"></script>
+    <!-- Need to load jQuery separately for deployJava to work properly -->
+    <script src="lib/jquery-1.11.1.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="dist/ie8.min.js"></script>
+    <![endif]-->
+    <!--[if IE 9]>
+    <script src="dist/ie9.min.js"></script>
+    <![endif]-->
+    <!--[if gt IE 9]><!-->
+    <script src="dist/all.min.js"></script>
+    <!--<![endif]-->
   </body>
 </html>
