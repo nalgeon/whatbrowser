@@ -23,11 +23,13 @@
         properties += render_property('Язык', whatbrowser.language);
         properties += render_property('Страница', whatbrowser.browser_size);
         properties += render_property('Экран', whatbrowser.screen);
-        properties += render_property('Браузер', whatbrowser.ua.browser);
-        properties += render_property('Движок', whatbrowser.ua.engine);
-        properties += render_property('ОС', whatbrowser.ua.os);
-        properties += render_property('Устройство', whatbrowser.ua.device);
+        properties += render_property('Браузер', whatbrowser.ua && whatbrowser.ua.browser);
+        properties += render_property('Движок', whatbrowser.ua &&whatbrowser.ua.engine);
+        properties += render_property('ОС', whatbrowser.ua && whatbrowser.ua.os);
+        properties += render_property('Устройство', whatbrowser.ua && whatbrowser.ua.device);
         properties += render_property('Юзер-агент', whatbrowser.ua);
+        properties += render_property('IP-адрес', whatbrowser.geo && whatbrowser.geo.ip);
+        properties += render_property('Местоположение', whatbrowser.geo && whatbrowser.geo.address);
         return properties;
     }
 
@@ -46,29 +48,26 @@
         return header_msg;
     }
 
-    function show_geo(whatbrowser) {
-        var $details = $('#details-table').children('tbody'),
-            properties = $details.html();
-            properties += render_property('IP-адрес', whatbrowser.geo.ip || '');
-            properties += render_property('Местоположение', whatbrowser.geo.address);
-            $details.html(properties);
-            $('#details-tocopy').val(Hashcode.serialize(whatbrowser));
-    }
-
     function show_links(whatbrowser) {
-        if (whatbrowser.id && whatbrowser.flash.enabled) {
+        if (ZeroClipboard && whatbrowser.id && whatbrowser.flash && whatbrowser.flash.enabled) {
             // can copy link to clipboard
             $('#copy-value').val(whatbrowser.link);
+        } else if (ZeroClipboard && whatbrowser.flash && whatbrowser.flash.enabled) {
+            // browser info is not persisted, can copy text to clipboard
+            $('#info-link').hide();
+            $('#info-copy').show();
         } else if (whatbrowser.id) {
-            // can only send link via mail
+            // copying disabled, can only send link via mail
             $('#info-link-copy').hide();
             $('#mail-value').val(whatbrowser.link);
-            $('#info-link-mail').find('a').attr('href', 'mailto:?subject=Информация о моем браузере&body=http://whatbrowser.ru/#!' + whatbrowser.id)
+            $('#info-link-mail').find('a').attr('href', 
+                'mailto:?subject=' + encodeURIComponent('Информация о моем браузере&body=' + whatbrowser.link)
+            );
             $('#info-link-mail').show();
         } else {
-            // browser info is not persisted, no link available
+            // browser info is not persisted, copying disabled
             $('#info-link').hide();
-            $('#info-nolink').show();
+            $('#info-nothing').show();
         }
     }
 
@@ -101,11 +100,12 @@
         $('.link-text').click(function() {
             $(this).select();
         });
-        ZeroClipboard.config({
+        ZeroClipboard && ZeroClipboard.config({
             hoverClass: 'zero-hover',
             activeClass: 'zero-active'
         });
-        init_clipboard($('#info-link').find('button'));
+        ZeroClipboard && init_clipboard($('#info-link').find('button'));
+        ZeroClipboard && init_clipboard($('#info-copy').find('button'));
     }
 
     function show_by_id(id) {
@@ -114,7 +114,7 @@
                 show_info(whatbrowser, id.own);
             })
             .fail(function(error) {
-                console.log('Failed to load by id ' + id.value + ': ' + error.message);
+                // console.log('Failed to load by id ' + id.value + ': ' + error.message);
                 if (id.own) {
                     show();
                 } else {
@@ -129,14 +129,13 @@
                 show_info(whatbrowser, true);
             })
             .fail(function(whatbrowser, error) {
-                console.log('Failed to save browser info: ' + error.message);
+                // console.log('Failed to save browser info: ' + error.message);
                 show_info(whatbrowser, true);  
             });
     }
 
     $(function() {
         init_ui();
-        WhatBrowser.on_geo = show_geo;
         var id = WhatBrowserManager.get_id();
         if (id) {
             show_by_id(id);
