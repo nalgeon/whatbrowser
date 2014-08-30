@@ -1,16 +1,16 @@
 /*
  * Browser info manager module: webiste info persistence
  */
-(function($, Cookies, WhatBrowser, Parse) {
+(function($, Cookies, WhatBrowser) {
     'use strict';
 
-    var parseEnabled = Parse || false,
-        WhatBrowserInfo;
-    
-    if (parseEnabled) {
-        Parse.initialize("WxMn71WOwf2RM6s6vYR57Th1rsfRplumcDDaWQxF", "aomlkmdE6QrVTF0FRoX4XgyJFqR2FP2W4QtLJg7A");
-        WhatBrowserInfo = Parse && Parse.Object.extend("WhatBrowser");
-    }
+    var PARSE_BASE_URL = 'https://api.parse.com/1/classes/WhatBrowser',
+        PARSE_HEADERS = {
+                    'X-Parse-Application-Id': 'WxMn71WOwf2RM6s6vYR57Th1rsfRplumcDDaWQxF',
+                    'X-Parse-REST-API-Key': 'EA4xA8UNhbUK5eMyHepEJnUWDyCzoMZxr0t1HOmp'
+                },
+        TIMEOUT = 1000;
+    var parseEnabled = true;
 
     /**
      * Get browser info id from url hash or from cookies
@@ -44,21 +44,29 @@
         
         loader.done(function(whatbrowser) {
             if (parseEnabled) {
-                var info = new WhatBrowserInfo();
-                info.save(whatbrowser).then(
-                    function(info) {
-                        whatbrowser.id = info.id;
-                        whatbrowser.link = 'http://whatbrowser.ru/#!' + whatbrowser.id;
-                        // save id to cookies to load it later on page refresh
-                        if (Cookies.enabled) {
-                            Cookies.set('whatbrowser', whatbrowser.id, { expires: 28800 });
-                        }
-                        promise.resolve(whatbrowser);
-                    },
-                    function(error) {
-                        promise.reject(whatbrowser, error);  
+                // console.log('Saving info');
+                $.ajax(PARSE_BASE_URL, {
+                    contentType: 'application/json',
+                    data: JSON.stringify(whatbrowser),
+                    dataType: 'json',
+                    headers: PARSE_HEADERS,
+                    timeout: TIMEOUT,
+                    type: 'POST'
+                })
+                .done(function(response) {
+                    // console.log('Saved info');
+                    whatbrowser.id = response.objectId;
+                    whatbrowser.link = 'http://whatbrowser.ru/#!' + whatbrowser.id;
+                    // save id to cookies to load it later on page refresh
+                    if (Cookies.enabled) {
+                        Cookies.set('whatbrowser', whatbrowser.id, { expires: 28800 });
                     }
-                );
+                    promise.resolve(whatbrowser);
+                })
+                .fail(function(xhr, status, error) {
+                    // console.log('Failed to save info, status ' + status + ', error ' + error);
+                    promise.reject(whatbrowser, error);  
+                });
             } else {
                 promise.reject(whatbrowser, { message: 'Parse not initialized' });
             }
@@ -73,18 +81,25 @@
     function load(id) {
         var promise = $.Deferred();
         if (parseEnabled) {
-            var query = new Parse.Query(WhatBrowserInfo);
-            query.get(id).then(
-                function(info) {
-                    var whatbrowser = new WhatBrowser(info.attributes);
-                    whatbrowser.id = info.id;
-                    whatbrowser.link = 'http://whatbrowser.ru/#!' + whatbrowser.id;
-                    promise.resolve(whatbrowser);
-                },
-                function(error) {
-                    promise.reject(error);  
-                }
-            );
+            // console.log('Loading info #' + id);
+            $.ajax(PARSE_BASE_URL + '/' + id, {
+                contentType: 'application/json',
+                dataType: 'json',
+                headers: PARSE_HEADERS,
+                timeout: TIMEOUT,
+                type: 'GET'
+            })
+            .done(function(info) {
+                // console.log('Loaded info #' + id);
+                var whatbrowser = new WhatBrowser(info);
+                whatbrowser.id = id;
+                whatbrowser.link = 'http://whatbrowser.ru/#!' + whatbrowser.id;
+                promise.resolve(whatbrowser);
+            })
+            .fail(function(xhr, status, error) {
+                // console.log('Failed to info #' + id + ', status ' + status + ', error ' + error);
+                promise.reject(error);  
+            });
         } else {
             promise.reject({ message: 'Parse not initialized' });
         }

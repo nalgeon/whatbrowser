@@ -120,10 +120,10 @@
                 show_info(whatbrowser, id.own);
             })
             .fail(function(error) {
-                // console.log('Failed to load by id ' + id.value + ': ' + error.message);
                 if (id.own) {
                     show();
                 } else {
+                    // console.log('Nothing to show');
                     $('#message').find('h2').text('По этой ссылке ничего нет :-(');
                 }
             });
@@ -132,10 +132,11 @@
     function show() {
         WhatBrowserManager.create()
             .done(function(whatbrowser) {
+                // console.log('Showing own info');
                 show_info(whatbrowser, true);
             })
             .fail(function(whatbrowser, error) {
-                // console.log('Failed to save browser info: ' + error.message);
+                // console.log('Showing own info');
                 show_info(whatbrowser, true);  
             });
     }
