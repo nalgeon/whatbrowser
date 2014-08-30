@@ -38,15 +38,9 @@ module.exports = function(grunt){
                       'lib/deployjava.js', 'dist/website.min.js'],
                 dest: 'dist/ie8.min.js'
             },
-            ie9: {
-                src: ['lib/cookies-0.4.0.min.js', 'lib/zeroclipboard-2.1.6.min.js',
-                      'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.0.min.js', 
-                      'lib/deployjava.js', 'dist/website.min.js'],
-                dest: 'dist/ie9.min.js'
-            },
             all: {
                 src: ['lib/cookies-0.4.0.min.js', 'lib/zeroclipboard-2.1.6.min.js',
-                      'lib/parse-1.2.19.min.js', 'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.0.min.js', 
+                      'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.0.min.js', 
                       'lib/deployjava.js', 'dist/website.min.js'],
                 dest: 'dist/all.min.js'
             }
