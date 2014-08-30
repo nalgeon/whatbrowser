@@ -5,7 +5,7 @@
     'use strict';
 
     function render_property(name, value) {
-        var str_value = value.toString ? value.toString() : '' + value;
+        var str_value = value && value.toString && value.toString() || ('' + value);
         if (!str_value) {
             return '';
         }
@@ -61,7 +61,10 @@
             $('#info-link-copy').hide();
             $('#mail-value').val(whatbrowser.link);
             $('#info-link-mail').find('a').attr('href', 
-                'mailto:?subject=' + encodeURIComponent('Информация о моем браузере&body=' + whatbrowser.link)
+                'mailto:?subject=' + 
+                encodeURIComponent('Информация о моем браузере') + 
+                '&body=' +
+                encodeURIComponent(whatbrowser.link)
             );
             $('#info-link-mail').show();
         } else {
@@ -88,7 +91,10 @@
     function init_clipboard($button) {
         var clipboard = new ZeroClipboard($button.get(0));
         clipboard.on('aftercopy', function(e) {
-            var $status = $(e.target).next();
+            var $btn = $(e.target),
+                $text = $btn.prev(),
+                $status = $btn.next();
+            $text.focus().select();
             $status.text('Скопировано!');
             window.setTimeout(function() {
                 $status.text('');
