@@ -17,7 +17,7 @@ module.exports = function(grunt){
                 banner: '<%= banner %>',
                 beautify: false,
                 compress: false,
-                mangle: false
+                mangle: true
             },
             website: {
                 files: {

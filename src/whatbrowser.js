@@ -124,6 +124,9 @@
     function ua(whatbrowser, source) {
         var self = whatbrowser;
         if (!UAParser) {
+            self.ua = {
+                ua: navigator.userAgent
+            };
             return;
         }
         load_property(whatbrowser, 'ua', function() {
