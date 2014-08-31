@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <title>Как встроить WhatBrowser.ru на свой сайт</title>
+    </head>
+    <body>
+        <p>Информация о браузере:</p>
+        <pre id="whatbrowser">
+        </pre>
+        <!-- Обязательная зависимость -->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <!-- Необязательная зависимость, нужно для парсинга юзер-агента -->
+        <script src="https://rawgit.com/faisalman/ua-parser-js/master/src/ua-parser.min.js"></script>
+        <!-- Необязательная зависимость, нужно для определения версии флеша -->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+        <!-- Необязательная зависимость, нужно для определения версии джавы -->
+        <script src="https://www.java.com/js/deployJava.js"></script>
+        <!-- Обязательная зависимость -->
+        <!-- <script src="https://raw.githubusercontent.com/algenon/whatbrowser/master/dist/whatbrowser.min.js"></script> -->
+        <script src="dist/whatbrowser.min.js"></script>
+        <script>
+            WhatBrowser.create({ geo: true }).done(function(whatbrowser) {
+                console.log(whatbrowser);
+                $("#whatbrowser").html(JSON.stringify(whatbrowser, null, 4));
+            });
+        </script>
+  </body>
+</html>
