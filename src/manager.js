@@ -68,7 +68,8 @@
                     promise.reject(whatbrowser, error);  
                 });
             } else {
-                promise.reject(whatbrowser, { message: 'Parse not initialized' });
+                // console.log('Failed to save info, Parse is not initialized');
+                promise.reject(whatbrowser, 'Parse not initialized');
             }
         });
         
@@ -97,11 +98,12 @@
                 promise.resolve(whatbrowser);
             })
             .fail(function(xhr, status, error) {
-                // console.log('Failed to info #' + id + ', status ' + status + ', error ' + error);
+                // console.log('Failed to load info #' + id + ', status ' + status + ', error ' + error);
                 promise.reject(error);  
             });
         } else {
-            promise.reject({ message: 'Parse not initialized' });
+            // console.log('Failed to load info, Parse is not initialized');
+            promise.reject('Parse not initialized');
         }
         return promise;
     }

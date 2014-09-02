@@ -121,7 +121,11 @@
             })
             .fail(function(error) {
                 if (id.own) {
-                    show();
+                    // loading failed, let's not try to persist info, just show it
+                    // console.log('Showing own info');
+                    WhatBrowser.create({ geo: true }).done(function(whatbrowser) {
+                        show_info(whatbrowser, true);
+                    }); 
                 } else {
                     // console.log('Nothing to show');
                     $('#message').find('h2').text('По этой ссылке ничего нет :-(');
@@ -137,7 +141,7 @@
             })
             .fail(function(whatbrowser, error) {
                 // console.log('Showing own info');
-                show_info(whatbrowser, true);  
+                show_info(whatbrowser, true);
             });
     }
 
