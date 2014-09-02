@@ -75,16 +75,7 @@ WhatBrowser.create().done(function(whatbrowser) {
 Геолокация
 ----------
 
-Чтобы получить IP-адрес и географическое местоположение, подключите библиотеку `jquery.jsonp` и передайте опцию `geo = true`:
-
-```html
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://rawgit.com/faisalman/ua-parser-js/master/src/ua-parser.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
-<script src="https://www.java.com/js/deployJava.js"></script>
-<script src="https://rawgit.com/algenon/whatbrowser/master/lib/jquery.jsonp-2.4.0.min.js"></script>
-<script src="https://rawgit.com/algenon/whatbrowser/master/dist/whatbrowser.min.js"></script> 
-```
+Чтобы получить IP-адрес и географическое местоположение, передайте опцию `geo = true`:
 
 ```js
 WhatBrowser.create({ geo: true }).done(function(whatbrowser) {

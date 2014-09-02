@@ -185,8 +185,9 @@
 
     function geo(whatbrowser) {
         var self = whatbrowser,
-            promise = $.Deferred();
-        $.jsonp && $.jsonp('//freegeoip.net/json/?callback=?', { timeout: 500 })
+            promise = $.Deferred(),
+            received_answer = false;
+        $.getJSON('//freegeoip.net/json/?callback=?', { timeout: 450 })
             .done(function(data) {
                 fill_geo(whatbrowser, 
                     {
@@ -202,16 +203,25 @@
                         }
                     }
                 );
-                // console.log('Geo ready');
+                console.log('Geo ready');
                 promise.resolve(whatbrowser);
             })
             .fail(function() {
-                // console.log('Geo failed');
+                console.log('Geo failed');
                 promise.resolve(whatbrowser);  
+            })
+            .always(function() {
+                received_answer = true;
             });
-        if (!$.jsonp) {
-           promise.resolve(whatbrowser);
-        }
+
+        // jQuery does not handle cross-domain JSONP errors,
+        // need to check for it manually
+        window.setTimeout(function() {
+            if (!received_answer) {
+                console.log('Geo failed');
+                promise.resolve(whatbrowser);
+            }
+        }, 500);
         return promise;
     }
 
