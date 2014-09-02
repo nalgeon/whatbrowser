@@ -187,7 +187,7 @@
         var self = whatbrowser,
             promise = $.Deferred(),
             received_answer = false;
-        $.getJSON('//freegeoip.net/json/?callback=?', { timeout: 450 })
+        $.getJSON('//freegeoip.net/json/?callback=?', { timeout: 500 })
             .done(function(data) {
                 fill_geo(whatbrowser, 
                     {
@@ -203,11 +203,11 @@
                         }
                     }
                 );
-                console.log('Geo ready');
+                // console.log('Geo ready');
                 promise.resolve(whatbrowser);
             })
             .fail(function() {
-                console.log('Geo failed');
+                // console.log('Geo failed');
                 promise.resolve(whatbrowser);  
             })
             .always(function() {
@@ -218,10 +218,10 @@
         // need to check for it manually
         window.setTimeout(function() {
             if (!received_answer) {
-                console.log('Geo failed');
+                // console.log('Geo failed by JSONP-checker');
                 promise.resolve(whatbrowser);
             }
-        }, 500);
+        }, 800);
         return promise;
     }
 
