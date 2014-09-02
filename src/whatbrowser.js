@@ -186,7 +186,7 @@
     function geo(whatbrowser) {
         var self = whatbrowser,
             promise = $.Deferred();
-        $.getJSON('//freegeoip.net/json/?callback=?', { timeout: 500 })
+        $.jsonp && $.jsonp('//freegeoip.net/json/?callback=?', { timeout: 500 })
             .done(function(data) {
                 fill_geo(whatbrowser, 
                     {
@@ -208,7 +208,10 @@
             .fail(function() {
                 // console.log('Geo failed');
                 promise.resolve(whatbrowser);  
-            })
+            });
+        if (!$.jsonp) {
+           promise.resolve(whatbrowser);
+        }
         return promise;
     }
 

@@ -6,7 +6,7 @@
 
     function render_property(name, value) {
         var str_value = value && value.toString && value.toString() || ('' + value);
-        if (!str_value) {
+        if (str_value === 'undefined' || !str_value) {
             return '';
         }
         return '<tr>' +
@@ -28,8 +28,8 @@
         properties += render_property('ОС', whatbrowser.ua && whatbrowser.ua.os);
         properties += render_property('Устройство', whatbrowser.ua && whatbrowser.ua.device);
         properties += render_property('Юзер-агент', whatbrowser.ua);
-        // properties += render_property('IP-адрес', whatbrowser.geo && whatbrowser.geo.ip);
-        // properties += render_property('Местоположение', whatbrowser.geo && whatbrowser.geo.address);
+        properties += render_property('IP-адрес', whatbrowser.geo && whatbrowser.geo.ip);
+        properties += render_property('Местоположение', whatbrowser.geo && whatbrowser.geo.address);
         return properties;
     }
 
