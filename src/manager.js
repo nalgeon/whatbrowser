@@ -39,7 +39,7 @@
      * Persist new browser info to DB.
      */
     function create() {
-        var loader = WhatBrowser.create({ geo: true }),
+        var loader = WhatBrowser.create({ geo: false }),
             promise = $.Deferred();
         
         loader.done(function(whatbrowser) {
