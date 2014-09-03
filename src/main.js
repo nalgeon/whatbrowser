@@ -6,7 +6,7 @@
 
     function render_property(name, value) {
         var str_value = value && value.toString && value.toString() || ('' + value);
-        if (!str_value) {
+        if (str_value === 'undefined' || !str_value) {
             return '';
         }
         return '<tr>' +
@@ -28,8 +28,8 @@
         properties += render_property('ОС', whatbrowser.ua && whatbrowser.ua.os);
         properties += render_property('Устройство', whatbrowser.ua && whatbrowser.ua.device);
         properties += render_property('Юзер-агент', whatbrowser.ua);
-        // properties += render_property('IP-адрес', whatbrowser.geo && whatbrowser.geo.ip);
-        // properties += render_property('Местоположение', whatbrowser.geo && whatbrowser.geo.address);
+        properties += render_property('IP-адрес', whatbrowser.geo && whatbrowser.geo.ip);
+        properties += render_property('Местоположение', whatbrowser.geo && whatbrowser.geo.address);
         return properties;
     }
 
@@ -121,7 +121,11 @@
             })
             .fail(function(error) {
                 if (id.own) {
-                    show();
+                    // loading failed, let's not try to persist info, just show it
+                    // console.log('Showing own info');
+                    WhatBrowser.create({ geo: true }).done(function(whatbrowser) {
+                        show_info(whatbrowser, true);
+                    }); 
                 } else {
                     // console.log('Nothing to show');
                     $('#message').find('h2').text('По этой ссылке ничего нет :-(');
@@ -137,7 +141,7 @@
             })
             .fail(function(whatbrowser, error) {
                 // console.log('Showing own info');
-                show_info(whatbrowser, true);  
+                show_info(whatbrowser, true);
             });
     }
 

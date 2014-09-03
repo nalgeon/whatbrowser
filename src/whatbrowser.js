@@ -33,6 +33,10 @@
         return false;
     }
 
+    function resolution_to_str(width, height) {
+        return width + ' × ' + height + ' px';
+    }
+
     function load_property(whatbrowser, property_name, load_func, source) {
         whatbrowser[property_name] = source ? source[property_name] : load_func();
     } 
@@ -46,7 +50,7 @@
             };
         }, source);
         self.browser_size.toString = function() {
-            return self.browser_size.width + ' x ' + self.browser_size.height + ' px';
+            return resolution_to_str(self.browser_size.width, self.browser_size.height);
         };
     }
 
@@ -110,14 +114,21 @@
         load_property(whatbrowser, 'screen', function() {
             return window.screen && {
                 color_depth: window.screen.colorDepth,
+                pixel_ratio: window.devicePixelRatio,
                 height: window.screen.height,
                 width: window.screen.width
             };
         }, source);
         self.screen.toString = function() {
-            return window.screen 
-                ? self.screen.width + ' x ' + self.screen.height + ' px, ' + self.screen.color_depth + ' bit'
-                : '';
+            var scrn = self.screen,
+                str = scrn &&
+                      (resolution_to_str(scrn.width, scrn.height) + ', ' + scrn.color_depth + ' bit') ||
+                      '';
+            str += scrn.pixel_ratio && 
+                   scrn.pixel_ratio > 1 &&
+                   (' (retina ' + resolution_to_str(scrn.width * scrn.pixel_ratio, scrn.height * scrn.pixel_ratio) + ')') || 
+                   '';
+            return str;
         };
     }
 
@@ -185,7 +196,8 @@
 
     function geo(whatbrowser) {
         var self = whatbrowser,
-            promise = $.Deferred();
+            promise = $.Deferred(),
+            received_answer = false;
         $.getJSON('//freegeoip.net/json/?callback=?', { timeout: 500 })
             .done(function(data) {
                 fill_geo(whatbrowser, 
@@ -209,6 +221,18 @@
                 // console.log('Geo failed');
                 promise.resolve(whatbrowser);  
             })
+            .always(function() {
+                received_answer = true;
+            });
+
+        // jQuery does not handle cross-domain JSONP errors,
+        // need to check for it manually
+        window.setTimeout(function() {
+            if (!received_answer) {
+                // console.log('Geo failed by JSONP-checker');
+                promise.resolve(whatbrowser);
+            }
+        }, 800);
         return promise;
     }
 
