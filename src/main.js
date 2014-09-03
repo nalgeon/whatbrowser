@@ -49,15 +49,11 @@
     }
 
     function show_links(whatbrowser) {
-        if (ZeroClipboard && whatbrowser.id && whatbrowser.flash && whatbrowser.flash.enabled) {
+        if (whatbrowser.id && ZeroClipboard && whatbrowser.flash && whatbrowser.flash.enabled) {
             // can copy link to clipboard
             $('#copy-value').val(whatbrowser.link);
-        } else if (ZeroClipboard && whatbrowser.flash && whatbrowser.flash.enabled) {
-            // browser info is not persisted, can copy text to clipboard
-            $('#info-link').hide();
-            $('#info-copy').show();
         } else if (whatbrowser.id) {
-            // copying disabled, can only send link via mail
+            // copying disabled, but can send link via email
             $('#info-link-copy').hide();
             $('#mail-value').val(whatbrowser.link);
             $('#info-link-mail').find('a').attr('href', 
@@ -68,9 +64,15 @@
             );
             $('#info-link-mail').show();
         } else {
-            // browser info is not persisted, copying disabled
+            // browser info is not persisted, can send text via email
             $('#info-link').hide();
-            $('#info-nothing').show();
+            $('#info-mail').find('a').attr('href', 
+                'mailto:?subject=' + 
+                encodeURIComponent('Информация о моем браузере') + 
+                '&body=' +
+                encodeURIComponent($('#details-tocopy').val())
+            );
+            $('#info-mail').show();
         }
     }
 
