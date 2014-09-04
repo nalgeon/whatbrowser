@@ -1,7 +1,7 @@
 /**
  * Hashcode module: object to string serialization
  */
-(function() {
+(function(JSON, LZString) {
     'use strict';
 
     /**
@@ -19,46 +19,13 @@
         return hash;
     }
 
-    /**
-     * Serialize object to a string. If object property is a function, it is ignored.
-     * http://pmav.eu/stuff/javascript-hash-code/source/
-     */
-    function serialize(parent, element) {
-        var type, 
-            obj = element ? parent[element] : parent,
-            serialized = '';
-
-        function quote(el) {
-            return '"' + el + '"';
-        }
-        
-        type = typeof obj;
-
-        if (type === 'object') {
-            if (element) {
-                serialized += quote(element) + ':{';
-            } else {
-                serialized += '{';
-            }
-            for (var child in obj) {
-                serialized += serialize(obj, child);
-            }
-            serialized += '},';
-        } else if (type === 'function') {
-            // do nothing
-        } else if (type === 'string') {
-            serialized += quote(element) + ':' + quote(obj) + ',';
-        } else {
-            serialized += quote(element) + ':' + obj + ',';
-        }
-
-        return serialized;
-    }
-
     window.Hashcode = {
-        serialize: window.JSON ? window.JSON.stringify : serialize
+        parse: JSON.parse,
+        serialize: JSON.stringify,
+        compress_base64: LZString.compressToBase64,
+        decompress_base64: LZString.decompressFromBase64
     };
 
     return window.Hashcode;
     
-})();
+})(window.JSON, window.LZString);

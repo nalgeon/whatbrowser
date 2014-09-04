@@ -1,7 +1,7 @@
 /**
  * Main module: rendering, ui logic
  */
-(function($, ZeroClipboard, Hashcode, WhatBrowser, WhatBrowserManager) {
+(function($, ZeroClipboard, WhatBrowserManager) {
     'use strict';
 
     function render_property(name, value) {
@@ -19,7 +19,7 @@
         var properties = '';
         properties += render_property('Куки', whatbrowser.cookies ? 'да' : 'нет');
         properties += render_property('Флеш', whatbrowser.flash);
-        properties += render_property('Java', whatbrowser.java);
+        properties += render_property('Джава', whatbrowser.java);
         properties += render_property('Язык', whatbrowser.language);
         properties += render_property('Страница', whatbrowser.browser_size);
         properties += render_property('Экран', whatbrowser.screen);
@@ -37,7 +37,7 @@
         var header_msg = '';
         if (!own) {
             header_msg = 'Вы смотрите браузер по ссылке ' +
-                '<a href="' + whatbrowser.link + '">' + whatbrowser.id + '</a>';
+                '<a href="' + whatbrowser.link + '">' + whatbrowser.id.substr(0, 4) + '</a>';
         }
         else if (whatbrowser.ua.browser.name) {
             header_msg = 'У вас ' + whatbrowser.ua.browser.name + ' ' + whatbrowser.ua.browser.major;
@@ -49,15 +49,11 @@
     }
 
     function show_links(whatbrowser) {
-        if (ZeroClipboard && whatbrowser.id && whatbrowser.flash && whatbrowser.flash.enabled) {
+        if (whatbrowser.link && ZeroClipboard && whatbrowser.flash && whatbrowser.flash.enabled) {
             // can copy link to clipboard
             $('#copy-value').val(whatbrowser.link);
-        } else if (ZeroClipboard && whatbrowser.flash && whatbrowser.flash.enabled) {
-            // browser info is not persisted, can copy text to clipboard
-            $('#info-link').hide();
-            $('#info-copy').show();
-        } else if (whatbrowser.id) {
-            // copying disabled, can only send link via mail
+        } else if (whatbrowser.link) {
+            // copying disabled, but can send link via email
             $('#info-link-copy').hide();
             $('#mail-value').val(whatbrowser.link);
             $('#info-link-mail').find('a').attr('href', 
@@ -68,16 +64,15 @@
             );
             $('#info-link-mail').show();
         } else {
-            // browser info is not persisted, copying disabled
+            // we failed miserably, lets just display info
             $('#info-link').hide();
-            $('#info-nothing').show();
+            $('#info-show').show();
         }
     }
 
     function show_info(whatbrowser, own) {
         var $details = $('#details-table').children('tbody');
         $details.html(render_info(whatbrowser));
-        $('#details-tocopy').val(Hashcode.serialize(whatbrowser));
         $('#header-msg').html(render_header(whatbrowser, own));
         if (own) {
             show_links(whatbrowser);
@@ -104,7 +99,11 @@
 
     function init_ui() {
         $('.link-text').click(function() {
-            $(this).select();
+            if (this.setSelectionRange) {
+                this.setSelectionRange(0, 9999);
+            } else {
+                $(this).select();
+            }
         });
         ZeroClipboard && ZeroClipboard.config({
             hoverClass: 'zero-hover',
@@ -114,51 +113,46 @@
         ZeroClipboard && init_clipboard($('#info-copy').find('button'));
     }
 
-    function show_by_id(id) {
-        WhatBrowserManager.load(id.value)
+    function show_external(id) {
+        WhatBrowserManager.load(id)
             .done(function(whatbrowser) {
-                show_info(whatbrowser, id.own);
+                show_info(whatbrowser, false);
             })
             .fail(function(error) {
-                if (id.own) {
-                    // loading failed, let's not try to persist info, just show it
-                    // console.log('Showing own info');
-                    WhatBrowser.create({ geo: true }).done(function(whatbrowser) {
-                        show_info(whatbrowser, true);
-                    }); 
-                } else {
-                    // console.log('Nothing to show');
-                    $('#message').find('h2').text('По этой ссылке ничего нет :-(');
-                }
+                $('#message').find('h2').text('По этой ссылке ничего нет :-(');
             });
     }
 
-    function show() {
-        WhatBrowserManager.create()
-            .done(function(whatbrowser) {
-                // console.log('Showing own info');
-                show_info(whatbrowser, true);
-            })
-            .fail(function(whatbrowser, error) {
-                // console.log('Showing own info');
-                show_info(whatbrowser, true);
+    function show_local(id) {
+        if (id) {
+            WhatBrowserManager.create(id)
+                .done(function(whatbrowser) {
+                    show_info(whatbrowser, true);
+                    WhatBrowserManager.update(id, whatbrowser);
             });
+        } else {
+            WhatBrowserManager.create_and_save()
+                .done(function(whatbrowser) {
+                    show_info(whatbrowser, true);
+                })
+                .fail(function(whatbrowser, error) {
+                    show_info(whatbrowser, true);
+                });
+        }
     }
 
     $(function() {
         init_ui();
         var id = WhatBrowserManager.get_id();
-        if (id) {
-            show_by_id(id);
+        if (id.local) {
+            show_local(id.value);
         } else {
-            show();
+            show_external(id.value);
         }
     });
     
 })(
     window.jQuery, 
     window.ZeroClipboard, 
-    window.Hashcode, 
-    window.WhatBrowser,
     window.WhatBrowserManager
 );
