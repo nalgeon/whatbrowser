@@ -36,8 +36,8 @@
     function render_header(whatbrowser, own) {
         var header_msg = '';
         if (!own) {
-            header_msg = 'Вы смотрите браузер по ссылке ' +
-                '<a href="' + whatbrowser.link + '">' + whatbrowser.id.substr(0, 4) + '</a>';
+            header_msg = 'Вы смотрите браузер ' +
+                '<a href="' + whatbrowser.link + '">по ссылке</a>';
         }
         else if (whatbrowser.ua.browser.name) {
             header_msg = 'У вас ' + whatbrowser.ua.browser.name + ' ' + whatbrowser.ua.browser.major;
