@@ -11,8 +11,7 @@
                     'X-Parse-REST-API-Key': 'EA4xA8UNhbUK5eMyHepEJnUWDyCzoMZxr0t1HOmp'
                 },
         SAVE_TIMEOUT = 1000,
-        LOAD_TIMEOUT = 2000,
-        BASE_URL = 'http://whatbrowser.ru/';
+        LOAD_TIMEOUT = 2000;
 
     function log(message) {
         // console.log(message);
@@ -44,15 +43,23 @@
 
     function get_long_link(whatbrowser) {
         try {
-            var whatbrowser_str = Hashcode.serialize(whatbrowser);
-            return BASE_URL + '#!' + Hashcode.compress_base64(whatbrowser_str);
+            var whatbrowser_str = Hashcode.serialize(whatbrowser),
+                hash = Hashcode.compress_base64(whatbrowser_str);
+
+            return {
+                hash: hash,
+                full: window.location.origin + '/#!' + hash
+            };
         } catch (e) {
-            return '';
+            return null;
         }
     }
 
     function get_short_link(whatbrowser) {
-        return BASE_URL + '#!' + whatbrowser.id;
+        return {
+            hash: whatbrowser.id,
+            full: window.location.origin + '/#!' + whatbrowser.id
+        };
     }
 
     /**
@@ -152,7 +159,7 @@
             whatbrowser_str = Hashcode.decompress_base64(id);
             whatbrowser = new WhatBrowser(Hashcode.parse(whatbrowser_str));
             whatbrowser.link = get_long_link(whatbrowser);
-            whatbrowser.id = whatbrowser.link.substr(whatbrowser.link.indexOf('/#!') + 3);
+            whatbrowser.id = whatbrowser.link.hash.substr(0, 3) + whatbrowser.link.hash.substr(-5, 3);
             log('Loaded info');
             promise.resolve(whatbrowser);
         } catch (e) {

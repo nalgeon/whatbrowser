@@ -38,7 +38,7 @@
         var header_msg = '';
         if (!own) {
             header_msg = 'Вы смотрите браузер ' +
-                '<a href="' + whatbrowser.link + '">по ссылке</a>';
+                '<a href="' + whatbrowser.link.full + '">' + whatbrowser.id + '</a>';
         }
         else if (whatbrowser.ua.browser.name) {
             header_msg = 'У вас ' + whatbrowser.ua.browser.name + ' ' + whatbrowser.ua.browser.major;
@@ -52,18 +52,21 @@
     function show_links(whatbrowser) {
         if (whatbrowser.link && ZeroClipboard && whatbrowser.flash && whatbrowser.flash.enabled) {
             // can copy link to clipboard
-            $('#copy-value').val(whatbrowser.link);
+            $('#copy-value').val(whatbrowser.link.full);
         } else if (whatbrowser.link) {
             // copying disabled, but can send link via email
             $('#info-link-copy').hide();
-            $('#mail-value').val(whatbrowser.link);
+            $('#mail-value').val(whatbrowser.link.full);
             $('#info-link-mail').find('a').attr('href',
                 'mailto:?subject=' +
                 encodeURIComponent('Информация о моем браузере') +
                 '&body=' +
-                encodeURIComponent(whatbrowser.link)
+                encodeURIComponent(whatbrowser.link.full)
             );
             $('#info-link-mail').show();
+            if (window.history && window.history.pushState) {
+                window.history.pushState(whatbrowser.link, '', '#!' + whatbrowser.link.hash);
+            }
         } else {
             // we failed miserably, lets just display info
             $('#info-link').hide();
