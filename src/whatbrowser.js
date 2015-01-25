@@ -1,31 +1,33 @@
 /*
- * Browser info module: webiste info detection 
+ * Browser info module: webiste info detection
  */
+/*global window*/
 (function(window, $, UAParser, swfobject, deployJava) {
     'use strict';
 
-    var navigator = window.navigator;
+    var navigator = window.navigator,
+        document = window.document;
 
     function has_cookies() {
         if (navigator.cookieEnabled) {
             return true;
         }
         // create and delete cookie
-        document.cookie = "cookietest=1";
-        var ret = document.cookie.indexOf("cookietest=") != -1;
-        document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+        document.cookie = 'cookietest=1';
+        var ret = document.cookie.indexOf('cookietest=') !== -1;
+        document.cookie = 'cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT';
         return ret;
     }
 
     function has_flash() {
         try {
-          var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
+          var fo = window.ActiveXObject && new window.ActiveXObject('ShockwaveFlash.ShockwaveFlash') || null;
           if (fo) {
             return true;
           }
         } catch (e) {
           if (navigator.mimeTypes
-                && navigator.mimeTypes['application/x-shockwave-flash'] != undefined
+                && navigator.mimeTypes['application/x-shockwave-flash'] !== undefined
                 && navigator.mimeTypes['application/x-shockwave-flash'].enabledPlugin) {
             return true;
           }
@@ -39,7 +41,7 @@
 
     function load_property(whatbrowser, property_name, load_func, source) {
         whatbrowser[property_name] = source ? source[property_name] : load_func();
-    } 
+    }
 
     function browser_size(whatbrowser, source) {
         var self = whatbrowser;
@@ -55,7 +57,6 @@
     }
 
     function cookies(whatbrowser, source) {
-        var self = whatbrowser;
         load_property(whatbrowser, 'cookies', function() {
             return has_cookies();
         }, source);
@@ -71,8 +72,8 @@
         }, source);
         self.flash.toString = function() {
             if (self.flash.enabled && self.flash.version) {
-                return self.flash.version.major + '.' + 
-                  self.flash.version.minor + '.' + 
+                return self.flash.version.major + '.' +
+                  self.flash.version.minor + '.' +
                   self.flash.version.release;
             } else {
                 return self.flash.enabled ? 'да' : 'нет';
@@ -91,19 +92,17 @@
         self.java.toString = function() {
             return self.java.enabled
                 ? self.java.version || 'да'
-                : 'нет';    
+                : 'нет';
         };
     }
 
     function language(whatbrowser, source) {
-        var self = whatbrowser;
         load_property(whatbrowser, 'language', function() {
             return navigator.language || navigator.userLanguage;
         }, source);
     }
 
     function online(whatbrowser, source) {
-        var self = whatbrowser;
         load_property(whatbrowser, 'online', function() {
             return navigator.onLine;
         }, source);
@@ -124,9 +123,9 @@
                 str = scrn &&
                       (resolution_to_str(scrn.width, scrn.height) + ', ' + scrn.color_depth + ' bit') ||
                       '';
-            str += scrn.pixel_ratio && 
+            str += scrn.pixel_ratio &&
                    scrn.pixel_ratio > 1 &&
-                   (' (retina ' + resolution_to_str(scrn.width * scrn.pixel_ratio, scrn.height * scrn.pixel_ratio) + ')') || 
+                   (' (retina ' + resolution_to_str(scrn.width * scrn.pixel_ratio, scrn.height * scrn.pixel_ratio) + ')') ||
                    '';
             return str;
         };
@@ -181,7 +180,7 @@
             self.geo.position.toString = function() {
                 var position = self.geo.position;
                 return position.latitude ? position.latitude + ', ' + position.longitude : '';
-            }
+            };
         }
         if (self.geo && self.geo.address) {
             self.geo.address.toString = function() {
@@ -190,17 +189,16 @@
                 str += (address.region && (', ' + address.region)) || '';
                 str += (address.city && (', ' + address.city)) || '';
                 return str;
-            }
+            };
         }
     }
 
-    function geo(whatbrowser) {
-        var self = whatbrowser,
-            promise = $.Deferred(),
+    function geolocate(whatbrowser) {
+        var promise = $.Deferred(),
             received_answer = false;
         $.getJSON('//freegeoip.net/json/?callback=?', { timeout: 500 })
             .done(function(data) {
-                fill_geo(whatbrowser, 
+                fill_geo(whatbrowser,
                     {
                         ip: data.ip,
                         position: {
@@ -219,7 +217,7 @@
             })
             .fail(function() {
                 // console.log('Geo failed');
-                promise.resolve(whatbrowser);  
+                promise.resolve(whatbrowser);
             })
             .always(function() {
                 received_answer = true;
@@ -256,14 +254,14 @@
             promise = $.Deferred();
         options = options || {};
         if (options.geo) {
-            geo(whatbrowser).always(function(whatbrowser) {
-                promise.resolve(whatbrowser);    
+            geolocate(whatbrowser).always(function(whatbrowserWithGeo) {
+                promise.resolve(whatbrowserWithGeo);
             });
         } else {
             promise.resolve(whatbrowser);
         }
         return promise;
-    }
+    };
 
     window.WhatBrowser = WhatBrowser;
     return WhatBrowser;

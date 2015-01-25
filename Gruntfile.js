@@ -12,6 +12,10 @@ module.exports = function(grunt){
             ' For details, see <%= pkg.homepage %>',
             '/\n'].join('\n *'),
 
+        eslint: {
+            target: ['src/*.js']
+        },
+
         uglify: {
             options: {
                 banner: '<%= banner %>',
@@ -61,5 +65,7 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.registerTask('default', ['uglify', 'concat', 'cssmin']);
+    grunt.loadNpmTasks('grunt-eslint');
+    grunt.registerTask('test', ['eslint']);
+    grunt.registerTask('default', ['eslint', 'uglify', 'concat', 'cssmin']);
 };

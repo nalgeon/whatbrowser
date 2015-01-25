@@ -1,6 +1,7 @@
 /**
  * Main module: rendering, ui logic
  */
+/*global window*/
 (function($, ZeroClipboard, WhatBrowserManager) {
     'use strict';
 
@@ -24,7 +25,7 @@
         properties += render_property('Страница', whatbrowser.browser_size);
         properties += render_property('Экран', whatbrowser.screen);
         properties += render_property('Браузер', whatbrowser.ua && whatbrowser.ua.browser);
-        properties += render_property('Движок', whatbrowser.ua &&whatbrowser.ua.engine);
+        properties += render_property('Движок', whatbrowser.ua && whatbrowser.ua.engine);
         properties += render_property('ОС', whatbrowser.ua && whatbrowser.ua.os);
         properties += render_property('Устройство', whatbrowser.ua && whatbrowser.ua.device);
         properties += render_property('Юзер-агент', whatbrowser.ua);
@@ -56,9 +57,9 @@
             // copying disabled, but can send link via email
             $('#info-link-copy').hide();
             $('#mail-value').val(whatbrowser.link);
-            $('#info-link-mail').find('a').attr('href', 
-                'mailto:?subject=' + 
-                encodeURIComponent('Информация о моем браузере') + 
+            $('#info-link-mail').find('a').attr('href',
+                'mailto:?subject=' +
+                encodeURIComponent('Информация о моем браузере') +
                 '&body=' +
                 encodeURIComponent(whatbrowser.link)
             );
@@ -105,12 +106,14 @@
                 $(this).select();
             }
         });
-        ZeroClipboard && ZeroClipboard.config({
-            hoverClass: 'zero-hover',
-            activeClass: 'zero-active'
-        });
-        ZeroClipboard && init_clipboard($('#info-link').find('button'));
-        ZeroClipboard && init_clipboard($('#info-copy').find('button'));
+        if (ZeroClipboard) {
+            ZeroClipboard.config({
+                hoverClass: 'zero-hover',
+                activeClass: 'zero-active'
+            });
+            init_clipboard($('#info-link').find('button'));
+            init_clipboard($('#info-copy').find('button'));
+        }
     }
 
     function show_external(id) {
@@ -118,7 +121,7 @@
             .done(function(whatbrowser) {
                 show_info(whatbrowser, false);
             })
-            .fail(function(error) {
+            .fail(function() {
                 $('#message').find('h2').text('По этой ссылке ничего нет :-(');
             });
     }
@@ -135,7 +138,7 @@
                 .done(function(whatbrowser) {
                     show_info(whatbrowser, true);
                 })
-                .fail(function(whatbrowser, error) {
+                .fail(function(whatbrowser) {
                     show_info(whatbrowser, true);
                 });
         }
@@ -150,9 +153,9 @@
             show_external(id.value);
         }
     });
-    
+
 })(
-    window.jQuery, 
-    window.ZeroClipboard, 
+    window.jQuery,
+    window.ZeroClipboard,
     window.WhatBrowserManager
 );

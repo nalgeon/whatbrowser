@@ -1,6 +1,7 @@
 /*
  * Browser info manager module: webiste info persistence
  */
+/*global window*/
 (function($, Cookies, Hashcode, WhatBrowser) {
     'use strict';
 
@@ -15,6 +16,7 @@
 
     function log(message) {
         // console.log(message);
+        return message;
     }
 
     /**
@@ -23,14 +25,14 @@
     function get_id() {
         function get_id_url() {
             var hash = window.location.hash;
-            if (hash && hash.substr(0,2) === '#!') {
+            if (hash && hash.substr(0, 2) === '#!') {
                 return { value: hash.substr(2), local: false };
             }
             return null;
         }
         function get_id_cookies() {
             if (Cookies.enabled) {
-                var id = Cookies.get('whatbrowser')
+                var id = Cookies.get('whatbrowser');
                 if (id) {
                     return { value: id, local: true };
                 }
@@ -59,11 +61,11 @@
     function create(id) {
         var loader = WhatBrowser.create(),
             promise = $.Deferred();
-        
+
         loader.done(function(whatbrowser) {
             if (id) {
                 whatbrowser.id = id;
-                whatbrowser.link = get_short_link(whatbrowser);    
+                whatbrowser.link = get_short_link(whatbrowser);
             } else {
                 whatbrowser.link = get_long_link(whatbrowser);
             }
@@ -79,7 +81,7 @@
     function create_and_save() {
         var loader = WhatBrowser.create(),
             promise = $.Deferred();
-        
+
         loader.done(function(whatbrowser) {
             log('Saving new info');
             $.ajax(PARSE_BASE_URL, {
@@ -103,10 +105,10 @@
             .fail(function(xhr, status, error) {
                 log('Failed to save info, status ' + status + ', error ' + error);
                 whatbrowser.link = get_long_link(whatbrowser);
-                promise.reject(whatbrowser, error);  
+                promise.reject(whatbrowser, error);
             });
         });
-        
+
         return promise;
     }
 
@@ -115,7 +117,7 @@
      */
     function update(id, whatbrowser) {
         var promise = $.Deferred();
-        
+
         log('Updating info');
         $.ajax(PARSE_BASE_URL + '/' + id, {
             contentType: 'application/json',
@@ -125,15 +127,15 @@
             timeout: SAVE_TIMEOUT,
             type: 'PUT'
         })
-        .done(function(response) {
+        .done(function() {
             log('Updated info');
             promise.resolve(whatbrowser);
         })
         .fail(function(xhr, status, error) {
             log('Failed to update info, status ' + status + ', error ' + error);
-            promise.reject(whatbrowser, error);  
+            promise.reject(whatbrowser, error);
         });
-        
+
         return promise;
     }
 
@@ -165,7 +167,7 @@
      */
     function load_from_db(id) {
         var promise = $.Deferred();
-        
+
         log('Loading info #' + id);
         $.ajax(PARSE_BASE_URL + '/' + id, {
             contentType: 'application/json',
@@ -183,7 +185,7 @@
         })
         .fail(function(xhr, status, error) {
             log('Failed to load info #' + id + ', status ' + status + ', error ' + error);
-            promise.reject(error);  
+            promise.reject(error);
         });
 
         return promise;
@@ -206,7 +208,8 @@
         create_and_save: create_and_save,
         update: update,
         load: load
-    }
+    };
+
     return window.WhatBrowserManager;
 
 })(window.jQuery, window.Cookies, window.Hashcode, window.WhatBrowser);
