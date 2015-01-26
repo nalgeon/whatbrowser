@@ -12,6 +12,14 @@
         "grunt-cli": ">= 0.1",
         "grunt-contrib-uglify": ">= 0.2",
         "grunt-contrib-concat": ">= 0.4",
-        "grunt-contrib-cssmin": ">= 0.10"
+        "grunt-contrib-cssmin": ">= 0.10",
+        "grunt-eslint": ">= 1.0"
+    },
+    "eslintConfig": {
+        "rules": {
+            "camelcase": false,
+            "new-cap": [ true, { "capIsNew": false } ],
+            "quotes": [1, "single"]
+        }
     }
 }
