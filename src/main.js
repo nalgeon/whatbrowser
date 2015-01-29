@@ -64,8 +64,8 @@
                 encodeURIComponent(whatbrowser.link.full)
             );
             $('#info-link-mail').show();
-            if (window.history && window.history.pushState) {
-                window.history.pushState(whatbrowser.link, '', '#!' + whatbrowser.link.hash);
+            if (window.history && window.history.replaceState) {
+                window.history.replaceState(whatbrowser.link, '', '#!' + whatbrowser.link.hash);
             }
         } else {
             // we failed miserably, lets just display info
