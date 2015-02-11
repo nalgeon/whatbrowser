@@ -101,24 +101,6 @@
         });
     }
 
-    function init_ui() {
-        $('.link-text').click(function() {
-            if (this.setSelectionRange) {
-                this.setSelectionRange(0, 9999);
-            } else {
-                $(this).select();
-            }
-        });
-        if (ZeroClipboard) {
-            ZeroClipboard.config({
-                hoverClass: 'zero-hover',
-                activeClass: 'zero-active'
-            });
-            init_clipboard($('#info-link').find('button'));
-            init_clipboard($('#info-copy').find('button'));
-        }
-    }
-
     function show_external(id) {
         WhatBrowserManager.load(id)
             .done(function(whatbrowser) {
@@ -147,14 +129,37 @@
         }
     }
 
-    $(function() {
-        init_ui();
+    function render() {
         var id = WhatBrowserManager.get_id();
         if (id.local) {
             show_local(id.value);
         } else {
             show_external(id.value);
         }
+    }
+
+    function init_ui() {
+        $(window).on('hashchange', render);
+        $('.link-text').click(function() {
+            if (this.setSelectionRange) {
+                this.setSelectionRange(0, 9999);
+            } else {
+                $(this).select();
+            }
+        });
+        if (ZeroClipboard) {
+            ZeroClipboard.config({
+                hoverClass: 'zero-hover',
+                activeClass: 'zero-active'
+            });
+            init_clipboard($('#info-link').find('button'));
+            init_clipboard($('#info-copy').find('button'));
+        }
+    }
+
+    $(function() {
+        init_ui();
+        render();
     });
 
 })(

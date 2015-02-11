@@ -123,9 +123,11 @@
      * Update existng browser info.
      */
     function update(id, whatbrowser) {
-        var promise = $.Deferred();
+        var promise = $.Deferred(),
+            link = whatbrowser.link;
 
         log('Updating info');
+        delete whatbrowser.link;
         $.ajax(PARSE_BASE_URL + '/' + id, {
             contentType: 'application/json',
             data: JSON.stringify(whatbrowser),
@@ -136,10 +138,12 @@
         })
         .done(function() {
             log('Updated info');
+            whatbrowser.link = link;
             promise.resolve(whatbrowser);
         })
         .fail(function(xhr, status, error) {
             log('Failed to update info, status ' + status + ', error ' + error);
+            whatbrowser.link = link;
             promise.reject(whatbrowser, error);
         });
 
