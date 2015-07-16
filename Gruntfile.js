@@ -39,14 +39,14 @@ module.exports = function(grunt){
             ie8: {
                 src: ['lib/json2.min.js',
                       'lib/lz-string-1.3.3-min.js', 'lib/cookies-0.4.0.min.js', 
-                      'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.3.min.js', 
+                      'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.8.min.js', 
                       'lib/deployjava.js', 'dist/website.min.js'],
                 dest: 'dist/ie8.min.js'
             },
             all: {
                 src: ['lib/json2.min.js',
                       'lib/lz-string-1.3.3-min.js', 'lib/cookies-0.4.0.min.js', 'lib/zeroclipboard-2.1.6.min.js',
-                      'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.3.min.js', 
+                      'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.8.min.js', 
                       'lib/deployjava.js', 'dist/website.min.js'],
                 dest: 'dist/all.min.js'
             }
