@@ -43,7 +43,7 @@ WhatBrowser.create().done(function(whatbrowser) {
 
 ```html
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://rawgit.com/faisalman/ua-parser-js/master/src/ua-parser.min.js"></script>
+<script src="https://rawgit.com/faisalman/ua-parser-js/master/dist/ua-parser.min.js"></script>
 <script src="https://rawgit.com/algenon/whatbrowser/master/dist/whatbrowser.min.js"></script> 
 ```
 
@@ -61,7 +61,7 @@ WhatBrowser.create().done(function(whatbrowser) {
 
 ```html
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://rawgit.com/faisalman/ua-parser-js/master/src/ua-parser.min.js"></script>
+<script src="https://rawgit.com/faisalman/ua-parser-js/master/dist/ua-parser.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
 <script src="https://www.java.com/js/deployJava.js"></script>
 <script src="https://rawgit.com/algenon/whatbrowser/master/dist/whatbrowser.min.js"></script> 

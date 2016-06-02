@@ -37,14 +37,17 @@
     function render_header(whatbrowser, own) {
         var header_msg = '';
         if (!own) {
-            header_msg = 'Вы смотрите браузер ' +
-                '<a href="' + whatbrowser.link.full + '">' + whatbrowser.id + '</a>';
+            header_msg = 'Сохраненный браузер: ' +
+                '<a href="' + whatbrowser.link.full + '">' +
+                whatbrowser.ua.browser.name + ' ' +
+                whatbrowser.ua.browser.major +
+                ' </a>';
         }
         else if (whatbrowser.ua.browser.name) {
-            header_msg = 'У вас ' + whatbrowser.ua.browser.name + ' ' + whatbrowser.ua.browser.major;
-            header_msg += whatbrowser.ua.os.name ? ' на ' + whatbrowser.ua.os.name : '';
+            header_msg = 'У вас ' + whatbrowser.ua.browser.name + ' ' + whatbrowser.ua.browser.major;
+            header_msg += whatbrowser.ua.os.name ? ' на ' + whatbrowser.ua.os.name : '';
         } else {
-            header_msg = 'У вас неизвестный науке браузер :-(';
+            header_msg = 'У вас неизвестный науке браузер :-[';
         }
         return header_msg;
     }
@@ -75,13 +78,15 @@
     }
 
     function show_info(whatbrowser, own) {
-        var $details = $('#details-table').children('tbody');
+        var $details = $('#details-table').children('tbody'),
+            header = render_header(whatbrowser, own);
         $details.html(render_info(whatbrowser));
-        $('#header-msg').html(render_header(whatbrowser, own));
         if (own) {
+            $('#header-msg').html(header);
             show_links(whatbrowser);
         } else {
-            $('#info-link').hide();
+            $('#details-msg').html(header);
+            $('#header').hide();
         }
         $('#message').hide();
         $('#result').fadeIn();
@@ -107,7 +112,7 @@
                 show_info(whatbrowser, false);
             })
             .fail(function() {
-                $('#message').find('h2').text('По этой ссылке ничего нет :-(');
+                $('#message').find('h2').text('По этой ссылке ничего нет :-[');
             });
     }
 
@@ -129,6 +134,12 @@
         }
     }
 
+    function get_origin() {
+        return window.location.protocol + '//' +
+                window.location.hostname +
+                (window.location.port ? ':' + window.location.port : '');
+    }
+
     function render() {
         var id = WhatBrowserManager.get_id();
         if (id.local) {
@@ -139,6 +150,8 @@
     }
 
     function init_ui() {
+        // fix IE origin
+        window.location.origin = window.location.origin || get_origin();
         $(window).on('hashchange', render);
         $('.link-text').click(function() {
             if (this.setSelectionRange) {

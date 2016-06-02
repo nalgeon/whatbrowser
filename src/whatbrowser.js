@@ -1,5 +1,5 @@
 /*
- * Browser info module: webiste info detection
+ * Browser info module: website info detection
  */
 /*global window*/
 (function(window, $, UAParser, swfobject, deployJava) {
