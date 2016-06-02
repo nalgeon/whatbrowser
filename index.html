@@ -5,13 +5,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <meta name="description" content="Сервис определения информации о браузере для службы поддержки">
+    <meta name="description" content="Вся информация о браузере для службы поддержки">
     <meta name="keywords" content="версия браузера, узнать версию браузера, какая версия браузера, какая у меня операционная система">
     <meta property="og:title" content="Какой у меня браузер?"/>
-    <meta property="og:description" content="Больше никаких утомительных расспросов! Соберите информацию о браузере в один клик и отправьте ее в техподдержку."/>
+    <meta property="og:description" content="Соберите информацию о браузере в один клик и отправьте ее в техподдержку."/>
     <meta property="og:image" content="img/whatbrowser.png"/>
     <meta property="og:url" content="http://whatbrowser.ru"/>
-    <meta property="og:site_name" content="WhatBrowser.ru"/>
+    <meta property="og:site_name" content="whatbrowser.ru"/>
     
     <link rel="stylesheet" href="dist/website.min.css">
     <link rel="shortcut icon" href="img/favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon" />
@@ -23,17 +23,14 @@
   <body>
     <div class="navbar">
         <div class="container">
-            <h1 class="pull-left">Какой у меня браузер?</h1>
-            <ul class="pull-right menu">
-                <li><a href="about.html">О проекте</a></li>
-            </ul>
+            <a href="/" class="navbar__title">Какой у меня браузер?</a>
         </div>
     </div>
     <noscript>
     <div class="nojs header">
         <div class="container">
-            <h2>У вас выключен JavaScript :-(</h2>
-            <h4>Пожалуйста, включите его в свойствах браузера и обновите страницу.</h4>
+            <h1>У вас выключен JavaScript :-[</h2>
+            <h4>Пожалуйста, включите его в свойствах браузера и обновите страницу.</h4>
         </div>
     </div>
     </noscript>
@@ -45,33 +42,33 @@
     </div>
 
     <div id="result" style="display: none;">
-        <div class="header">
+        <div id="header" class="header">
             <div class="container">
-                <h2 id="header-msg">У вас {browser} на {os}</h2>
+                <h2 class="header__title" id="header-msg">У вас {browser} на {os}</h2>
                 <div id="info-link">
-                    <h4>Отправьте в&nbsp;службу поддержки эту ссылку:</h4>
+                    <h4 class="header__action">Отправьте в службу поддержки эту ссылку:</h4>
                     <div id="info-link-copy" class="info-link">
                         <input id="copy-value" class="flat-input link-text" type="text" readonly="readonly"><button class="link-button" data-clipboard-target="copy-value">Копировать</button>
                         <span class="copy-status"></span>
                     </div>
                     <div id="info-link-mail" class="info-link" style="display: none;">
-                        <input id="mail-value" class="flat-input link-text" type="text" readonly="readonly"><a href="#" class="link-button">Отправить по&nbsp;email</a>
+                        <input id="mail-value" class="flat-input link-text" type="text" readonly="readonly"><a href="#" class="link-button">Отправить по email</a>
                     </div>
                 </div>
                 <div id="info-mail" style="display: none;">
-                    <h4>Отправьте в&nbsp;службу поддержки собранную информацию:</h4>
+                    <h4 class="header__action">Отправьте в службу поддержки собранную информацию:</h4>
                     <div class="info-link">
-                        <a href="#" class="link-button">Отправить по&nbsp;email</a>
+                        <a href="#" class="link-button">Отправить по email</a>
                     </div>
                 </div>
                 <div id="info-show" class="info-link" style="display: none;">
-                    <h4>Скопируйте текст на&nbsp;этой странице и&nbsp;отправьте в&nbsp;службу поддержки.</h4>
+                    <h4 class="header__action">Скопируйте текст на этой странице и отправьте в службу поддержки.</h4>
                 </div>
             </div>
         </div>
         <div class="container">
             <div class="details-wrapper">
-                <h3>Технические детали</h3>
+                <h3 id="details-msg">Технические детали</h3>
                 <div class="details">
                     <table id="details-table" class="details-table">
                         <tbody></tbody>
@@ -79,12 +76,11 @@
                 </div>
             </div>
             <div class="cfx footer">
-                <script type="text/javascript" src="//yandex.st/share/share.js" defer="defer"></script>
-                <div class="pull-left footer_item">2015&nbsp;<a href="http://antonz.ru">Антон Жиянов</a></div>
-                <div class="pull-right footer_item">
-                    <a class="footer_menu-item" href="https://github.com/algenon/whatbrowser">Github</a>
+                <div class="footer_item">2016&nbsp; <a href="http://antonz.ru">Антон Жиянов</a></div>
+                <div class="footer_item">
+                    <a class="footer_menu-item" href="about.html">О проекте</a>
                     <a class="footer_menu-item" href="ua.html">Парсер юзер-агента</a>
-                    <div class="yashare-auto-init footer_menu-item" data-yashareL10n="ru" data-yashareQuickServices="vkontakte,facebook,twitter" data-yashareTheme="counter" data-yashareTitle="Все, что нужно знать службе поддержки о браузере пользователя" data-yashareLink="http://whatbrowser.ru" data-yashareImage="img/whatbrowser.png" data-yashareDescription="WhatBrowser.ru собирает характеристики браузера и&nbsp;информацию об устройстве для техподдержки и тестирования."></div>
+                    <a class="footer_menu-item" href="https://github.com/algenon/whatbrowser">Гитхаб</a>
                 </div>
             </div>
         </div>
