@@ -2,8 +2,10 @@
  * Main module: rendering, ui logic
  */
 /*global window*/
-(function($, ZeroClipboard, WhatBrowserManager) {
+(function($, WhatBrowserManager) {
     'use strict';
+
+    var ZeroClipboard = null;
 
     function render_property(name, value) {
         var str_value = value && value.toString && value.toString() || ('' + value);
@@ -151,7 +153,9 @@
 
     function init_ui() {
         // fix IE origin
-        window.location.origin = window.location.origin || get_origin();
+        if (!window.location.origin) {
+          window.location.origin = get_origin();
+        }
         $(window).on('hashchange', render);
         $('.link-text').click(function() {
             if (this.setSelectionRange) {
@@ -177,6 +181,5 @@
 
 })(
     window.jQuery,
-    window.ZeroClipboard,
     window.WhatBrowserManager
 );

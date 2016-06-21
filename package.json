@@ -1,25 +1,23 @@
 {
-    "name": "whatbrowser.ru",
-    "version": "0.1.0",
-    "description": "WhatBrowser.ru gathers information about user browser for tech support",
-    "homepage": "http://whatbrowser.ru",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/algenon/whatbrowser.git"
-    },
-    "devDependencies": {
-        "grunt": ">= 0.4",
-        "grunt-cli": ">= 0.1",
-        "grunt-contrib-uglify": ">= 0.2",
-        "grunt-contrib-concat": ">= 0.4",
-        "grunt-contrib-cssmin": ">= 0.10",
-        "grunt-eslint": ">= 1.0"
-    },
-    "eslintConfig": {
-        "rules": {
-            "camelcase": false,
-            "new-cap": [ true, { "capIsNew": false } ],
-            "quotes": [1, "single"]
-        }
-    }
+  "name": "whatbrowser.ru",
+  "version": "0.1.0",
+  "description": "WhatBrowser.ru gathers information about user browser for tech support",
+  "homepage": "http://whatbrowser.ru",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/algenon/whatbrowser.git"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.9.0",
+    "eslint": "^2.11.1",
+    "eslint-config-airbnb-base": "^3.0.1",
+    "eslint-plugin-import": "^1.8.1",
+    "grunt": ">= 0.4",
+    "grunt-babel": "^6.0.0",
+    "grunt-cli": ">= 0.1",
+    "grunt-contrib-concat": ">= 0.4",
+    "grunt-contrib-cssmin": ">= 0.10",
+    "grunt-contrib-uglify": ">= 0.2",
+    "grunt-eslint": ">= 1.0"
+  }
 }

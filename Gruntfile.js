@@ -12,6 +12,18 @@ module.exports = function(grunt){
             ' For details, see <%= pkg.homepage %>',
             '/\n'].join('\n *'),
 
+        babel: {
+          options: {
+            sourceMap: true,
+            presets: ['es2015']
+          },
+          dist: {
+            files: {
+              'src/whatbrowser.js': 'src/whatbrowser.es6'
+            }
+          }
+        },
+
         eslint: {
             target: ['src/*.js']
         },
@@ -38,15 +50,15 @@ module.exports = function(grunt){
         concat: {
             ie8: {
                 src: ['lib/json2.min.js',
-                      'lib/lz-string-1.3.3-min.js', 'lib/cookies-0.4.0.min.js', 
-                      'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.10.min.js', 
+                      'lib/lz-string-1.3.3-min.js', 'lib/cookies-0.4.0.min.js',
+                      'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.10.min.js',
                       'lib/deployjava.js', 'dist/website.min.js'],
                 dest: 'dist/ie8.min.js'
             },
             all: {
                 src: ['lib/json2.min.js',
-                      'lib/lz-string-1.3.3-min.js', 'lib/cookies-0.4.0.min.js', 'lib/zeroclipboard-2.1.6.min.js',
-                      'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.10.min.js', 
+                      'lib/lz-string-1.3.3-min.js', 'lib/cookies-0.4.0.min.js',
+                      'lib/swfobject-2.2.min.js', 'lib/ua-parser-0.7.10.min.js',
                       'lib/deployjava.js', 'dist/website.min.js'],
                 dest: 'dist/all.min.js'
             }
@@ -66,6 +78,8 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-eslint');
-    grunt.registerTask('test', ['eslint']);
-    grunt.registerTask('default', ['eslint', 'uglify', 'concat', 'cssmin']);
+    grunt.loadNpmTasks('grunt-babel');
+    // grunt.registerTask('test', ['eslint']);
+    // grunt.registerTask('default', ['eslint', 'uglify', 'concat', 'cssmin']);
+    grunt.registerTask('default', ['babel', 'uglify', 'concat', 'cssmin']);
 };
