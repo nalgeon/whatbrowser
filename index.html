@@ -1,40 +1,48 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
+
+<head>
     <title>Какой у меня браузер?</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="description" content="Вся информация о браузере для службы поддержки">
-    <meta name="keywords" content="версия браузера, узнать версию браузера, какая версия браузера, какая у меня операционная система">
-    <meta property="og:title" content="Какой у меня браузер?"/>
-    <meta property="og:description" content="Соберите информацию о браузере в один клик и отправьте ее в техподдержку."/>
-    <meta property="og:image" content="img/whatbrowser.png"/>
-    <meta property="og:url" content="http://whatbrowser.ru"/>
-    <meta property="og:site_name" content="whatbrowser.ru"/>
-    
+    <meta name="keywords"
+        content="версия браузера, узнать версию браузера, какая версия браузера, какая у меня операционная система">
+    <meta property="og:title" content="Какой у меня браузер?" />
+    <meta property="og:description"
+        content="Соберите информацию о браузере в один клик и отправьте ее в техподдержку." />
+    <meta property="og:image" content="img/whatbrowser.png" />
+    <meta property="og:url" content="http://whatbrowser.ru" />
+    <meta property="og:site_name" content="whatbrowser.ru" />
+
     <link rel="stylesheet" href="dist/website.min.css">
     <link rel="shortcut icon" href="img/favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon" />
     <link rel="icon" href="img/favicon.png" sizes="16x16" type="image/png" />
-    <noscript><style> 
-        .jsonly { display: none; }
-    </style></noscript>
-  </head>
-  <body>
+    <noscript>
+        <style>
+            .jsonly {
+                display: none;
+            }
+        </style>
+    </noscript>
+</head>
+
+<body>
     <div class="navbar">
         <div class="container">
             <a href="/" class="navbar__title">Какой у меня браузер?</a>
         </div>
     </div>
     <noscript>
-    <div class="nojs header">
-        <div class="container">
-            <h1>У вас выключен JavaScript :-[</h2>
-            <h4>Пожалуйста, включите его в свойствах браузера и обновите страницу.</h4>
+        <div class="nojs header">
+            <div class="container">
+                <h1>У вас выключен JavaScript :-[</h2>
+                    <h4>Пожалуйста, включите его в свойствах браузера и обновите страницу.</h4>
+            </div>
         </div>
-    </div>
     </noscript>
-    
+
     <div id="message" class="jsonly header">
         <div class="container">
             <h2>Собираю информацию...</h2>
@@ -48,11 +56,9 @@
                 <div id="info-link">
                     <h4 class="header__action">Отправьте в службу поддержки эту ссылку:</h4>
                     <div id="info-link-copy" class="info-link">
-                        <input id="copy-value" class="flat-input link-text" type="text" readonly="readonly"><button class="link-button" data-clipboard-target="copy-value">Копировать</button>
-                        <span class="copy-status"></span>
-                    </div>
-                    <div id="info-link-mail" class="info-link" style="display: none;">
-                        <input id="mail-value" class="flat-input link-text" type="text" readonly="readonly"><a href="#" class="link-button">Отправить по email</a>
+                        <input id="copy-value" class="flat-input link-text" type="text" readonly="readonly">
+                        <button class="link-button" data-clipboard-target="#copy-value">Копировать</button>
+                        <span id="copy-status" class="copy-status"></span>
                     </div>
                 </div>
                 <div id="info-mail" style="display: none;">
@@ -85,16 +91,8 @@
             </div>
         </div>
     </div>
-    <!-- Need to load jQuery separately for deployJava to work properly -->
-    <script src="lib/jquery-1.11.1.min.js"></script>
-    <!--[if lt IE 9]>
-    <script src="dist/ie8.min.js"></script>
-    <![endif]-->
-    <!--[if gte IE 9]><!-->
+    <!-- <script src="lib/jquery-3.4.1.min.js"></script> -->
     <script src="dist/all.min.js"></script>
-    <!--<![endif]-->
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript"> (function (d, w, c) {if (w.location.hostname !== "whatbrowser.ru") {return; } (w[c] = w[c] || []).push(function() {try {w.yaCounter26023482 = new Ya.Metrika({id:26023482, clickmap:true, trackLinks:true, accurateTrackBounce:true}); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") {d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks"); </script> <noscript><div><img src="//mc.yandex.ru/watch/26023482" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
-  </body>
+</body>
+
 </html>
